@@ -110,6 +110,7 @@ def rent_vehicle():
            elif X < age_65:
                 print("You are too old for rent a car")
                 return None
+           print("Age is Ok")
            
         except ValueError:
             print("Invalid date format")
