@@ -50,8 +50,7 @@ def checkFirstLetterIsUp(text : str):
         print("first letter is not capital")
         return False
     
-def add_customer(customers):
-    BD = input("Enter Birthday: ")
+def add_customer(customers,BD):
     first_name = input("First name: ")
     if not checkFirstLetterIsUp(first_name):
         return None
@@ -120,7 +119,8 @@ def rent_vehicle():
             print(f"Hello {customer[0]} {customer[1]}")                              
             
         else:
-            add_customer(customers)
+            customers[customerBD]=[]
+            add_customer(customers,customerBD)
         #move the vehicle to rented file
         currentdate = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
         rentedCars[regNumber]=[customerBD,currentdate]
