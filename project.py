@@ -24,14 +24,25 @@ def read_file(file_path, delimiter=','):
 def write_file(file_path, data, delimiter=","):
     with open(file_path,'w') as file:
         for key, values in data.items():
-            line = delimiter.join([key]+values)
+            
+            line = key
+
+            for value in values:
+                line += delimiter + value
+                
             file.write(line + '\n')
 
 def show_vehicle():
     available_vehicles = read_file('vehicles.txt')
     for key, values in available_vehicles.items():
-        properties = ",".join(values)
-        print(f'* Reg. nr: {key}, Model: {values[0]}, Price per day: {values[1]}, Properties: {properties}')
+        
+        model = values[0]
+        price_per_day = values[1]
+        properties = values[2:] 
+        
+        print(f'* Reg. nr: {key}, Model: {values[0]}, Price per day: {values[1]}')
+        print(f'Properties: {values[2:]}')
+
 
 def add_customer(customers):
     BD = input("Enter Birthday: ")
@@ -78,12 +89,15 @@ def rent_vehicle():
         customerBD = input("Please enter your birthday in form DD/MM/YYYY: ")
         if customerBD in customers:
             customer = customers[customerBD]
-            print(f"Hello f'{customer[0]}' f'{customer[1]}'")
+            print(f"Hello {customer[0]} {customer[1]}")
+            
+    age_18 = datetime.datetime.strptime("01/01/2006", "%d/%m%/Y")
+    age_65 = datetime.datetime.strptime("01/01/1959", "%d/%m%/Y")
+                                        
 
-
-        elif customerBD > ('01/01/2006'):
+        if customerBD > age_18:
             print("You are too young to rent a car")
-        elif customerBD > ('01/01/1950'):
+        elif customerBD < age_65:
             print("You are too old for rent a car")
             
         else:
@@ -96,16 +110,17 @@ def rent_vehicle():
         print("Car is already rented")
     else:
         print("Car does not exist")
+        
 def count_the_money():
 
-    money = 0.00
+    money = 0.0
 
     with open('transActions.txt', 'r') as i:
         for line in i:
             total_price = float(line.strip().split(",")[-1])
-            total_earning =+ total_price
+            money += total_price
 
-        print(f"Total Earnings: ${total_earning:2f}")
+        print(f"Total Earnings: ${money:2f}")
     
 
 def main():
@@ -125,13 +140,7 @@ def main():
             break
             
         else:
-        print("invalid selection. Try again")
-
-
-if __name__ == "__main__":
-    main()
-
-
+            print("invalid selection. Try again")
 
 
 if __name__ == "__main__":
