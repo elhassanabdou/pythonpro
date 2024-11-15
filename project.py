@@ -43,12 +43,26 @@ def show_vehicle():
         print(f'* Reg. nr: {key}, Model: {values[0]}, Price per day: {values[1]}')
         print(f'Properties: {values[2:]}')
 
-
+def checkFirstLetterIsUp(text : str):
+    if text[0].isupper():
+        return True
+    else:
+        print("first letter is not capital")
+        return False
+    
 def add_customer(customers):
     BD = input("Enter Birthday: ")
     first_name = input("First name: ")
+    if not checkFirstLetterIsUp(first_name):
+        return None
     last_name = input("Last name: ")
-    customers[BD]=[first_name,last_name]
+    if not checkFirstLetterIsUp(last_name):
+        return None
+    email = input("Email: ")
+    if not '@' in email:
+        print("enter valid email")
+        return None
+    customers[BD]=[first_name,last_name,email]
     #write to customers file
     write_file('customers.txt',customers)
 
@@ -87,23 +101,28 @@ def rent_vehicle():
     
     if regNumber in available_vehicles:
         customerBD = input("Please enter your birthday in form DD/MM/YYYY: ")
+        try:
+           X = datetime.datetime.strptime(customerBD,"%d/%m/%Y")
+           age_18 = datetime.datetime.strptime("01/01/2006", "%d/%m/%Y")
+           age_65 = datetime.datetime.strptime("01/01/1959", "%d/%m/%Y")
+           if X > age_18:
+                print("You are too young to rent a car")
+                return None
+           elif X < age_65:
+                print("You are too old for rent a car")
+                return None
+           
+        except ValueError:
+            print("Invalid date format")
+            return None
         if customerBD in customers:
             customer = customers[customerBD]
-            print(f"Hello {customer[0]} {customer[1]}")
-            
-    age_18 = datetime.datetime.strptime("01/01/2006", "%d/%m%/Y")
-    age_65 = datetime.datetime.strptime("01/01/1959", "%d/%m%/Y")
-                                        
-
-        if customerBD > age_18:
-            print("You are too young to rent a car")
-        elif customerBD < age_65:
-            print("You are too old for rent a car")
+            print(f"Hello {customer[0]} {customer[1]}")                              
             
         else:
             add_customer(customers)
         #move the vehicle to rented file
-        currentdate = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
+        currentdate = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
         rentedCars[regNumber]=[customerBD,currentdate]
         write_file('rentedVehicles.txt',rentedCars)   
     elif regNumber in rentedCars:
